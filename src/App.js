@@ -1,24 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import ShowData from "../src/component/ShowData";
+import Posts from "../src/component/posts/Posts";
+import EditPost from "../src/component/posts/EditPost";
+import ShowPost from "../src/component/posts/ShowPost";
+import CreatePost from "../src/component/posts/CreatePost";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Navbar from "./component/layout/Navbar";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Navbar />
+      <h2 style={{ textAlign: "center" }}>:)Finally Creat CRUD React with Laravel(:</h2>
+
+      <Routes>
+        <Route path="/" element={<ShowData />} />
+        <Route path="/posts" element={<Posts />} />
+        <Route path="/create" element={<CreatePost />} />
+        <Route path="/edit/:id" element={<EditPost />} />
+        <Route path="/show/:id" element={<ShowPost />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
