@@ -10,16 +10,16 @@ const EditPost = () => {
   const [tags, setTags] = useState("");
   const [description, setDescription] = useState("");
 
-  const navigate = useNavigate();
   const { id } = useParams();
+  const navigate = useNavigate();
 
   //Update function here
   const Update = async (e) => {
     e.preventDefault();
     await axios.put(`${endpoint}${id}`, {
-      description: description,
       title: title,
       tags: tags,
+      description: description,
     });
     navigate("/posts");
   };
@@ -64,7 +64,7 @@ const EditPost = () => {
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Stock</label>
+          <label className="form-label">Description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
