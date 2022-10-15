@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Table } from "react-bootstrap";
+import Pagination from "react-js-pagination";
 
 //api base url
 const endpoint = "http://127.0.0.1:8000/api";
 
 const Posts = () => {
-  const [data, setData] = useState([]);
+  const [posts, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -15,10 +16,10 @@ const Posts = () => {
   }, []);
 
   //get All Post here from API
-  const getAllPosts = async () => {
+  const getAllPosts = async (pageNumber = 1) => {
     setLoading(true);
     try {
-      const response = await axios.get(`${endpoint}/posts`);
+      const response = await axios.get(`${endpoint}/posts?page=${pageNumber}`);
       setData(response.data.data);
       setLoading(false);
       console.log(response.data);
@@ -54,7 +55,7 @@ const Posts = () => {
           <h1 className="text-center">Loading......</h1>
         ) : (
           <tbody>
-            {data.map((post) => (
+            {posts?.data?.map((post) => (
               <tr key={post.id}>
                 <td> {post.title} </td>
                 <td> {post.tags} </td>
@@ -75,6 +76,25 @@ const Posts = () => {
           </tbody>
         )}
       </Table>
+      {posts?.total > 5 && (
+        <Pagination
+          activePage={posts?.current_page ? posts?.current_page : 0}
+          itemsCountPerPage={posts?.per_page ? posts?.per_page : 0}
+          totalItemsCount={posts?.total ? posts?.total : 0}
+          onChange={(pageNumber) => {
+            getAllPosts(pageNumber);
+          }}
+          pageRangeDisplayed={8}
+          itemClass="page-item"
+          linkClass="page-link"
+          itemClassFirst="p-first-page-link"
+          itemClassLast="p-last-page-link"
+          activeClass="p-active"
+          activeLinkClass="p-active-link"
+          firstPageText="First Page"
+          lastPageText="Last Lage"
+        />
+      )}
     </div>
   );
 };

@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Table } from "react-bootstrap";
+import Pagination from "react-js-pagination";
 
 //api base url
 const endpoint = "http://127.0.0.1:8000/api";
 
 const Products = () => {
-  const [data, setData] = useState([]);
+  const [products, setData] = useState([]);
   const [isLoading, setIsloading] = useState(false);
 
   useEffect(() => {
@@ -15,10 +16,10 @@ const Products = () => {
   }, []);
 
   //get all products
-  const allProducts = async () => {
+  const allProducts = async (pageNumber = 1) => {
     setIsloading(true);
     try {
-      const response = await axios.get(`${endpoint}/product`);
+      const response = await axios.get(`${endpoint}/product?page=${pageNumber}`);
       setData(response.data.data);
       setIsloading(false);
       console.log(response.data.data);
@@ -57,7 +58,7 @@ const Products = () => {
           <h1 className="text-center">Loading......</h1>
         ) : (
           <tbody>
-            {data.map((product) => (
+            {products?.data?.map((product) => (
               <tr key={product.id}>
                 <td> {product.name} </td>
                 <td> {product.post} </td>
@@ -77,6 +78,26 @@ const Products = () => {
           </tbody>
         )}
       </Table>
+
+      {products?.total > 5 && (
+        <Pagination
+          activePage={products?.current_page ? products?.current_page : 0}
+          itemsCountPerPage={products?.per_page ? products?.per_page : 0}
+          totalItemsCount={products?.total ? products?.total : 0}
+          onChange={(pageNumber) => {
+            allProducts(pageNumber);
+          }}
+          pageRangeDisplayed={8}
+          itemClass="page-item"
+          linkClass="page-link"
+          itemClassFirst="p-first-page-link"
+          itemClassLast="p-last-page-link"
+          activeClass="p-active"
+          activeLinkClass="p-active-link"
+          firstPageText="First Page"
+          lastPageText="Last Lage"
+        />
+      )}
     </div>
   );
 };
