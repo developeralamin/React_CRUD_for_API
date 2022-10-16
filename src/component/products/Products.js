@@ -48,7 +48,7 @@ const Products = () => {
         <thead className="bg-primary text-white">
           <tr>
             <th>Name</th>
-            <th>Post</th>
+            <th>Post Title</th>
             <th>Sale Price</th>
             <th>Cost Price</th>
             <th>Action</th>
@@ -61,7 +61,7 @@ const Products = () => {
             {products?.data?.map((product) => (
               <tr key={product.id}>
                 <td> {product.name} </td>
-                <td> {product.post} </td>
+                <td> {product?.post?.title} </td>
                 <td> {product.sale_price} </td>
                 <td> {product.cost_price} </td>
 

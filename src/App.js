@@ -16,7 +16,10 @@ function App() {
   return (
     <BrowserRouter>
       <Navbar />
-      <h2 style={{ textAlign: "center" }}>:)Finally Creat CRUD React with Laravel(:</h2>
+      <br />
+      <br />
+      <h2 style={{ textAlign: "center" }}>:)Finally Create CRUD React with Laravel(:</h2>
+      <br />
 
       <Routes>
         <Route path="/" element={<ShowData />} />
