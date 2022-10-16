@@ -7,6 +7,7 @@ const endpoint = "http://127.0.0.1:8000/api/product/";
 const endpointPost = "http://127.0.0.1:8000/api/posts";
 
 const EditProduct = () => {
+  const [isLoading, setIsloading] = useState(false);
   //get all post cause of it is forigen key
   const [posts, setPost] = useState([]);
 
@@ -19,6 +20,7 @@ const EditProduct = () => {
 
   //update product
   const Update = async (e) => {
+    // setIsloading(true);
     e.preventDefault();
     await axios.put(`${endpoint}${id}`, {
       name: name,
@@ -26,6 +28,7 @@ const EditProduct = () => {
       sale_price: sale_price,
       cost_price: cost_price,
     });
+    setIsloading(false);
     navigate("/products");
   };
 
@@ -37,18 +40,22 @@ const EditProduct = () => {
   }, []);
 
   const getSinlgProduct = async () => {
+    setIsloading(true);
     const response = await axios.get(`${endpoint}${id}`);
     setName(response.data.data.name);
     setPostId(response.data.data.post_id);
     setSalePrice(response.data.data.sale_price);
     setCostPrice(response.data.data.cost_price);
+    setIsloading(false);
   };
 
   //get All Post here from API
   const getAllPosts = async () => {
+    setIsloading(true);
     try {
       const response = await axios.get(`${endpointPost}`);
       setPost(response.data.data.data);
+      setIsloading(false);
       console.log(response.data.data.data);
     } catch (error) {
       console.log(error);
@@ -57,59 +64,63 @@ const EditProduct = () => {
 
   return (
     <div className="container">
-      <h3>Create Products</h3>
-      <form onSubmit={Update}>
-        <div className="mb-3">
-          <label className="form-label">Name</label>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            type="text"
-            className="form-control"
-            placeholder="Type name"
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Sale Price</label>
-          <input
-            type="text"
-            value={sale_price}
-            onChange={(e) => setSalePrice(e.target.value)}
-            className="form-control"
-            placeholder="Type sale price"
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Cost Price</label>
-          <textarea
-            value={cost_price}
-            onChange={(e) => setCostPrice(e.target.value)}
-            type="text"
-            className="form-control"
-            placeholder="Type cost price"
-          ></textarea>
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Posts</label>
-          <select
-            class="form-select"
-            value={post_id}
-            onChange={(e) => setPostId(e.target.value)}
-            aria-label="Default select example"
-          >
-            {posts.map((post) => {
-              return (
-                <option key={post} value={post.id}>
-                  {post.title}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <button type="submit" className="btn btn-primary">
-          Update
-        </button>
-      </form>
+      <h3>Update Products</h3>
+      {isLoading ? (
+        <h1 className="text-center">Loading......</h1>
+      ) : (
+        <form onSubmit={Update}>
+          <div className="mb-3">
+            <label className="form-label">Name</label>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              type="text"
+              className="form-control"
+              placeholder="Type name"
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Sale Price</label>
+            <input
+              type="text"
+              value={sale_price}
+              onChange={(e) => setSalePrice(e.target.value)}
+              className="form-control"
+              placeholder="Type sale price"
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Cost Price</label>
+            <textarea
+              value={cost_price}
+              onChange={(e) => setCostPrice(e.target.value)}
+              type="text"
+              className="form-control"
+              placeholder="Type cost price"
+            ></textarea>
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Posts</label>
+            <select
+              class="form-select"
+              value={post_id}
+              onChange={(e) => setPostId(e.target.value)}
+              aria-label="Default select example"
+            >
+              {posts.map((post) => {
+                return (
+                  <option key={post} value={post.id}>
+                    {post.title}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          <button type="submit" className="btn btn-primary">
+            Update
+          </button>
+        </form>
+      )}
     </div>
   );
 };
