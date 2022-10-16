@@ -4,9 +4,14 @@ import { useNavigate, useParams } from "react-router-dom";
 
 //api base url
 const endpoint = "http://127.0.0.1:8000/api/product/";
+const endpointPost = "http://127.0.0.1:8000/api/posts";
 
 const EditProduct = () => {
+  //get all post cause of it is forigen key
+  const [posts, setPost] = useState([]);
+
   const [name, setName] = useState("");
+  const [post_id, setPostId] = useState("");
   const [sale_price, setSalePrice] = useState("");
   const [cost_price, setCostPrice] = useState("");
   const { id } = useParams();
@@ -17,6 +22,7 @@ const EditProduct = () => {
     e.preventDefault();
     await axios.put(`${endpoint}${id}`, {
       name: name,
+      post_id: post_id,
       sale_price: sale_price,
       cost_price: cost_price,
     });
@@ -24,17 +30,30 @@ const EditProduct = () => {
   };
 
   console.log(Update);
-
   //show data in input field
   useEffect(() => {
-    const getSinlgProduct = async () => {
-      const response = await axios.get(`${endpoint}${id}`);
-      setName(response.data.data.name);
-      setSalePrice(response.data.data.sale_price);
-      setCostPrice(response.data.data.cost_price);
-    };
     getSinlgProduct();
+    getAllPosts();
   }, []);
+
+  const getSinlgProduct = async () => {
+    const response = await axios.get(`${endpoint}${id}`);
+    setName(response.data.data.name);
+    setPostId(response.data.data.post_id);
+    setSalePrice(response.data.data.sale_price);
+    setCostPrice(response.data.data.cost_price);
+  };
+
+  //get All Post here from API
+  const getAllPosts = async () => {
+    try {
+      const response = await axios.get(`${endpointPost}`);
+      setPost(response.data.data.data);
+      console.log(response.data.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="container">
@@ -69,6 +88,23 @@ const EditProduct = () => {
             className="form-control"
             placeholder="Type cost price"
           ></textarea>
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Posts</label>
+          <select
+            class="form-select"
+            value={post_id}
+            onChange={(e) => setPostId(e.target.value)}
+            aria-label="Default select example"
+          >
+            {posts.map((post) => {
+              return (
+                <option key={post} value={post.id}>
+                  {post.title}
+                </option>
+              );
+            })}
+          </select>
         </div>
         <button type="submit" className="btn btn-primary">
           Update
