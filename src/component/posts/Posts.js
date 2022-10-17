@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Table } from "react-bootstrap";
+//pagination
 import Pagination from "react-js-pagination";
+//sweetAlert
+import Swal from "sweetalert2";
 
 //api base url
 const endpoint = "http://127.0.0.1:8000/api";
@@ -11,6 +14,7 @@ const Posts = () => {
   const [posts, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
 
+  //Load all post here
   useEffect(() => {
     getAllPosts();
   }, []);
@@ -19,19 +23,37 @@ const Posts = () => {
   const getAllPosts = async (pageNumber = 1) => {
     setLoading(true);
     try {
-      const response = await axios.get(`${endpoint}/posts?page=${pageNumber}`);
-      setData(response.data.data);
-      setLoading(false);
-      console.log(response.data);
+      await axios.get(`${endpoint}/posts?page=${pageNumber}`).then((res) => {
+        setData(res.data.data);
+        setLoading(false);
+        console.log(res.data);
+      });
     } catch (error) {
       console.log(error);
     }
   };
 
-  //delete post
-  const deletePost = async (id) => {
-    await axios.delete(`${endpoint}/posts/${id}`);
-    getAllPosts();
+  //delete a post
+  const deletePost = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete(`${endpoint}/posts/${id}`).then((res) => {
+          Swal.fire("Deleted!", "success");
+          // reload-load posts
+          // let index = posts.indexOf(id);
+          // posts.splice(index, 1);
+          getAllPosts();
+        });
+      }
+    });
   };
 
   return (
@@ -42,12 +64,11 @@ const Posts = () => {
         </Link>
       </div>
 
-      <Table striped bordered hover size="sm">
+      <Table>
         <thead className="bg-primary text-white">
           <tr>
             <th>Title</th>
             <th>Tags</th>
-            {/* <th>Description</th> */}
             <th>Action</th>
           </tr>
         </thead>
@@ -59,7 +80,6 @@ const Posts = () => {
               <tr key={post.id}>
                 <td> {post.title} </td>
                 <td> {post.tags} </td>
-                {/* <td> {post.description} </td> */}
                 <td>
                   <Link to={`/show/${post.id}`} className="btn btn-primary">
                     View

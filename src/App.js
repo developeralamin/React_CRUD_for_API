@@ -18,7 +18,7 @@ function App() {
       <Navbar />
       <br />
       <br />
-      <h2 style={{ textAlign: "center" }}>:)Finally Create CRUD React with Laravel(:</h2>
+      <h4 style={{ textAlign: "center" }}>:)Finally Create CRUD React with Laravel(:</h4>
       <br />
 
       <Routes>

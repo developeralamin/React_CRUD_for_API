@@ -3,6 +3,8 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { Table } from "react-bootstrap";
 import Pagination from "react-js-pagination";
+//sweetAlert
+import Swal from "sweetalert2";
 
 //api base url
 const endpoint = "http://127.0.0.1:8000/api";
@@ -11,6 +13,7 @@ const Products = () => {
   const [products, setData] = useState([]);
   const [isLoading, setIsloading] = useState(false);
 
+  //Load all Products
   useEffect(() => {
     allProducts();
   }, []);
@@ -19,20 +22,39 @@ const Products = () => {
   const allProducts = async (pageNumber = 1) => {
     setIsloading(true);
     try {
-      const response = await axios.get(`${endpoint}/product?page=${pageNumber}`);
-      setData(response.data.data);
-      setIsloading(false);
-      console.log(response.data.data);
+      await axios.get(`${endpoint}/product?page=${pageNumber}`).then((response) => {
+        setData(response.data.data);
+        setIsloading(false);
+        console.log(response.data.data);
+      });
     } catch (error) {
       console.log(error);
     }
   };
 
   //   delete product item
-  const deleteproduct = async (id) => {
-    await axios.delete(`${endpoint}/product/${id}`);
-    allProducts();
+  const deleteproduct = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete(`${endpoint}/product/${id}`).then((res) => {
+          Swal.fire("Deleted!", "success");
+          // reload-load product
+          // let index = product.indexOf(id);
+          // product.splice(index, 1);
+          allProducts();
+        });
+      }
+    });
   };
+
   return (
     <div className="container">
       <div className="mr-2 float-right">

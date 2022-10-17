@@ -58,3 +58,10 @@ ul li {
 .text-center {
   text-align: center;
 }
+/**
+*Table css
+*/
+table.table {
+  width: 68%;
+  margin: 0 auto;
+}
