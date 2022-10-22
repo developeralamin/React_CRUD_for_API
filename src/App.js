@@ -8,6 +8,12 @@ import CreatePost from "../src/component/posts/CreatePost";
 import Products from "../src/component/products/Products";
 import CreateProduct from "../src/component/products/CreateProduct";
 import EditProduct from "../src/component/products/EditProduct";
+// lessons component
+import Lessons from "../src/component/lessons/Lessons";
+import ShowLesson from "../src/component/lessons/ShowLesson";
+import EditLesson from "../src/component/lessons/EditLesson";
+import CreateLesson from "../src/component/lessons/CreateLesson";
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./component/layout/Navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -30,6 +36,10 @@ function App() {
         <Route path="/products" element={<Products />} />
         <Route path="/createProduct" element={<CreateProduct />} />
         <Route path="/editproduct/:id" element={<EditProduct />} />
+        <Route path="/lessons" element={<Lessons />} />
+        <Route path="/CreateLesson" element={<CreateLesson />} />
+        <Route path="/showLesson/:id" element={<ShowLesson />} />
+        <Route path="/editLesson/:id" element={<EditLesson />} />
       </Routes>
     </BrowserRouter>
   );

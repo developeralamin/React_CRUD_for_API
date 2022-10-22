@@ -88,10 +88,13 @@ const Products = () => {
                 <td> {product.cost_price} </td>
 
                 <td>
-                  <Link to={`/editproduct/${product.id}`} className="btn btn-warning">
+                  <Link to={`/editproduct/${product.id}`} className="btn btn-sm btn-warning">
                     Edit
                   </Link>
-                  <button className="btn btn-danger" onClick={() => deleteproduct(product.id)}>
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => deleteproduct(product.id)}
+                  >
                     Delete
                   </button>
                 </td>

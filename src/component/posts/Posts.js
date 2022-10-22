@@ -81,13 +81,13 @@ const Posts = () => {
                 <td> {post.title} </td>
                 <td> {post.tags} </td>
                 <td>
-                  <Link to={`/show/${post.id}`} className="btn btn-primary">
+                  <Link to={`/show/${post.id}`} className="btn  btn-sm  btn-primary">
                     View
                   </Link>
-                  <Link to={`/edit/${post.id}`} className="btn btn-warning">
+                  <Link to={`/edit/${post.id}`} className="btn  btn-sm btn-warning">
                     Edit
                   </Link>
-                  <button onClick={() => deletePost(post.id)} className="btn btn-danger">
+                  <button onClick={() => deletePost(post.id)} className="btn btn-sm  btn-danger">
                     Delete
                   </button>
                 </td>

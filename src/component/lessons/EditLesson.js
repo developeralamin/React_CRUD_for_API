@@ -3,49 +3,49 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
 //api base url
-const endpoint = "http://127.0.0.1:8000/api/product/";
+const endpoint = "http://127.0.0.1:8000/api/lesson/";
 const endpointPost = "http://127.0.0.1:8000/api/posts";
 
-const EditProduct = () => {
+const EditLesson = () => {
   const [isLoading, setIsloading] = useState(false);
   //get all post cause of it is forigen key
   const [posts, setPost] = useState([]);
 
-  const [name, setName] = useState("");
   const [post_id, setPostId] = useState("");
-  const [sale_price, setSalePrice] = useState("");
-  const [cost_price, setCostPrice] = useState("");
+  const [title, settitle] = useState();
+  const [video_url, setvideo_url] = useState();
+  const [description, setdescription] = useState();
   const { id } = useParams();
   const navigate = useNavigate();
 
   //update product
   const Update = async (e) => {
-    // setIsloading(true);
+    setIsloading(true);
     e.preventDefault();
     await axios.put(`${endpoint}${id}`, {
-      name: name,
+      title: title,
       post_id: post_id,
-      sale_price: sale_price,
-      cost_price: cost_price,
+      video_url: video_url,
+      description: description,
     });
     setIsloading(false);
-    navigate("/products");
+    navigate("/lessons");
   };
 
   console.log(Update);
   //show data in input field
   useEffect(() => {
-    getSinlgProduct();
+    getSinlgeLesson();
     getAllPosts();
   }, []);
 
-  const getSinlgProduct = async () => {
+  const getSinlgeLesson = async () => {
     setIsloading(true);
     const response = await axios.get(`${endpoint}${id}`);
-    setName(response.data.data.name);
+    settitle(response.data.data.title);
     setPostId(response.data.data.post_id);
-    setSalePrice(response.data.data.sale_price);
-    setCostPrice(response.data.data.cost_price);
+    setvideo_url(response.data.data.video_url);
+    setdescription(response.data.data.description);
     setIsloading(false);
     console.log(response.data);
   };
@@ -65,50 +65,30 @@ const EditProduct = () => {
 
   return (
     <div className="container">
-      <h3>Update Products</h3>
+      <h3>Update Lesson</h3>
       {isLoading ? (
         <h1 className="text-center">Loading......</h1>
       ) : (
         <form onSubmit={Update}>
           <div className="mb-3">
-            <label className="form-label">Name</label>
+            <label className="form-label">Course Title</label>
             <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
               type="text"
+              value={title}
+              onChange={(e) => settitle(e.target.value)}
               className="form-control"
-              placeholder="Type name"
+              placeholder="Type Course Title"
             />
           </div>
           <div className="mb-3">
-            <label className="form-label">Sale Price</label>
-            <input
-              type="text"
-              value={sale_price}
-              onChange={(e) => setSalePrice(e.target.value)}
-              className="form-control"
-              placeholder="Type sale price"
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Cost Price</label>
-            <textarea
-              value={cost_price}
-              onChange={(e) => setCostPrice(e.target.value)}
-              type="text"
-              className="form-control"
-              placeholder="Type cost price"
-            ></textarea>
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Posts</label>
+            <label className="form-label">Posts Title</label>
             <select
               class="form-select"
               value={post_id}
               onChange={(e) => setPostId(e.target.value)}
               aria-label="Default select example"
             >
-              <option>Select Post</option>
+              {/* <option>Select Post</option> */}
               {posts.map((post, index) => {
                 return (
                   <option key={index.id} value={post.id}>
@@ -117,6 +97,30 @@ const EditProduct = () => {
                 );
               })}
             </select>
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Video Link</label>
+            <input
+              type="text"
+              value={video_url}
+              onChange={(e) => {
+                setvideo_url(e.target.value);
+              }}
+              className="form-control"
+              placeholder="Course link"
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Description</label>
+            <textarea
+              type="text"
+              value={description}
+              onChange={(e) => {
+                setdescription(e.target.value);
+              }}
+              className="form-control"
+              placeholder="Type Description"
+            ></textarea>
           </div>
           <button type="submit" className="btn btn-primary">
             Update
@@ -127,4 +131,4 @@ const EditProduct = () => {
   );
 };
 
-export default EditProduct;
+export default EditLesson;

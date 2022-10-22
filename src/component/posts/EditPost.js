@@ -16,7 +16,7 @@ const EditPost = () => {
 
   //Update function here
   const Update = async (e) => {
-    // setIsloading(true);
+    setIsloading(true);
     e.preventDefault();
     await axios.put(`${endpoint}${id}`, {
       title: title,
@@ -26,12 +26,10 @@ const EditPost = () => {
     setIsloading(false);
     navigate("/posts");
   };
-  //   console.log(Update);
 
   //Call a single Post data
   useEffect(() => {
     getSinglePost();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getSinglePost = async () => {
