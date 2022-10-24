@@ -16,22 +16,28 @@ const CreateProduct = () => {
   const [sale_price, setSalePrice] = useState("");
   const [cost_price, setCostPrice] = useState("");
 
+  const [errors, setErrors] = useState({});
+
   const navigate = useNavigate();
 
   const storeProduct = async (e) => {
     setIsloadaing(true);
     e.preventDefault();
-    await axios.post(endpoint, {
-      name: name,
-      post_id: post_id,
-      sale_price: sale_price,
-      cost_price: cost_price,
-    });
+    await axios
+      .post(endpoint, {
+        name: name,
+        post_id: post_id,
+        sale_price: sale_price,
+        cost_price: cost_price,
+      })
+      .catch((error) => {
+        setErrors(error.response.data.errorMsg);
+        console.log(error.response.data.errorMsg);
+      });
     setIsloadaing(false);
-    navigate("/products");
+    // navigate("/products");
   };
 
-  console.log(storeProduct);
   //show post
   useEffect(() => {
     getAllPosts();
@@ -47,9 +53,6 @@ const CreateProduct = () => {
       console.log(error);
     }
   };
-
-  console.log(storeProduct);
-  console.log("getAllPosts", getAllPosts);
 
   return (
     <div className="container">
@@ -68,6 +71,9 @@ const CreateProduct = () => {
               placeholder="Type name"
             />
           </div>
+
+          {errors?.name && <p style={{ color: "red" }}>{errors.name[0]}</p>}
+
           <div className="mb-3">
             <label className="form-label">Sale Price</label>
             <input
@@ -99,7 +105,7 @@ const CreateProduct = () => {
               <option>Select Post</option>
               {posts.map((post) => {
                 return (
-                  <option key={post} value={post.id}>
+                  <option key={post.id} value={post.id}>
                     {post.title}
                   </option>
                 );

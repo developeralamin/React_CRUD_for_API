@@ -13,18 +13,24 @@ const EditPost = () => {
 
   const { id } = useParams();
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
 
   //Update function here
   const Update = async (e) => {
     setIsloading(true);
     e.preventDefault();
-    await axios.put(`${endpoint}${id}`, {
-      title: title,
-      tags: tags,
-      description: description,
-    });
+    await axios
+      .put(`${endpoint}${id}`, {
+        title: title,
+        tags: tags,
+        description: description,
+      })
+      .catch((error) => {
+        setErrors(error.response.data.errorMsg);
+        console.log(error.response.data.errorMsg);
+      });
     setIsloading(false);
-    navigate("/posts");
+    // navigate("/posts");
   };
 
   //Call a single Post data
@@ -60,6 +66,9 @@ const EditPost = () => {
               placeholder="Type Title"
             />
           </div>
+
+          {errors?.title && <p style={{ color: "red" }}>{errors.title[0]}</p>}
+
           <div className="mb-3">
             <label className="form-label">Tags</label>
             <input

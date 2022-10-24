@@ -16,20 +16,28 @@ const CreateLesson = () => {
   const [video_url, setvideo_url] = useState("");
   const [description, setdescription] = useState("");
 
+  //catch error
+  const [errors, setErrors] = useState({});
+
   const navigate = useNavigate();
 
   //store a lesson
   const storeLesson = async (e) => {
     setIsLoading(true);
     e.preventDefault();
-    await axios.post(endpointLesson, {
-      title: title,
-      post_id: post_id,
-      video_url: video_url,
-      description: description,
-    });
+    await axios
+      .post(endpointLesson, {
+        title: title,
+        post_id: post_id,
+        video_url: video_url,
+        description: description,
+      })
+      .catch((error) => {
+        setErrors(error.response.data.errorMsg);
+        console.log(error.response.data.errorMsg);
+      });
     setIsLoading(false);
-    navigate("/lessons");
+    // navigate("/lessons");
   };
 
   //get posts
@@ -63,6 +71,9 @@ const CreateLesson = () => {
               placeholder="Type Course Title"
             />
           </div>
+
+          {errors?.title && <p style={{ color: "red" }}>{errors.title[0]}</p>}
+
           <div className="mb-3">
             <label className="form-label">Posts</label>
             <select
@@ -74,7 +85,7 @@ const CreateLesson = () => {
               <option>Select Post</option>
               {posts.map((post) => {
                 return (
-                  <option key={post} value={post.id}>
+                  <option key={post.id} value={post.id}>
                     {post.title}
                   </option>
                 );

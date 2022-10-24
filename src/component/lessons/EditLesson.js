@@ -18,18 +18,24 @@ const EditLesson = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const [errors, setErrors] = useState({});
   //update product
   const Update = async (e) => {
     setIsloading(true);
     e.preventDefault();
-    await axios.put(`${endpoint}${id}`, {
-      title: title,
-      post_id: post_id,
-      video_url: video_url,
-      description: description,
-    });
+    await axios
+      .put(`${endpoint}${id}`, {
+        title: title,
+        post_id: post_id,
+        video_url: video_url,
+        description: description,
+      })
+      .catch((error) => {
+        setErrors(error.response.data.errorMsg);
+        console.log(error.response.data.errorMsg);
+      });
     setIsloading(false);
-    navigate("/lessons");
+    // navigate("/lessons");
   };
 
   console.log(Update);
@@ -80,6 +86,9 @@ const EditLesson = () => {
               placeholder="Type Course Title"
             />
           </div>
+
+          {errors?.title && <p style={{ color: "red" }}>{errors.title[0]}</p>}
+
           <div className="mb-3">
             <label className="form-label">Posts Title</label>
             <select

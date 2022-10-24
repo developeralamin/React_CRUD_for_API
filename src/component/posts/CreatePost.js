@@ -12,7 +12,9 @@ const CreatePost = () => {
   const [title, setTitle] = useState("");
   const [tags, setTags] = useState("");
   const [description, setDescription] = useState("");
-  const [errors] = useState("");
+
+  //catch validation errors
+  const [errors, setErrors] = useState({});
 
   // console.log(errors);
   // const errors: {}
@@ -25,16 +27,12 @@ const CreatePost = () => {
         tags: tags,
         description: description,
       })
-      .then(() => {})
-      .catch((errors) => {
-        errors = response.errors;
+      .catch((error) => {
+        setErrors(error.response.data.errorMsg);
+        console.log("test__00", error.response.data.errorMsg);
       });
-    //    }
     setIsloadaing(false);
-    // console.log()
-    navigate("/posts");
   };
-  // console.log(storePost.title);
 
   return (
     <div className="container">
@@ -54,7 +52,9 @@ const CreatePost = () => {
               placeholder="Type Title"
             />
           </div>
-          <p className="text-danger">{errors.title}</p>
+
+          {errors?.title && <p style={{ color: "red" }}>{errors.title[0]}</p>}
+
           <div className="mb-3">
             <label className="form-label">Tags</label>
             <input

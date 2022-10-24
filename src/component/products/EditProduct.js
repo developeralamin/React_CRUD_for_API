@@ -18,21 +18,27 @@ const EditProduct = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const [errors, setErrors] = useState({});
+
   //update product
   const Update = async (e) => {
     // setIsloading(true);
     e.preventDefault();
-    await axios.put(`${endpoint}${id}`, {
-      name: name,
-      post_id: post_id,
-      sale_price: sale_price,
-      cost_price: cost_price,
-    });
+    await axios
+      .put(`${endpoint}${id}`, {
+        name: name,
+        post_id: post_id,
+        sale_price: sale_price,
+        cost_price: cost_price,
+      })
+      .catch((error) => {
+        setErrors(error.response.data.errorMsg);
+        console.log(error.response.data.errorMsg);
+      });
     setIsloading(false);
-    navigate("/products");
+    // navigate("/products");
   };
 
-  console.log(Update);
   //show data in input field
   useEffect(() => {
     getSinlgProduct();
@@ -47,7 +53,6 @@ const EditProduct = () => {
     setSalePrice(response.data.data.sale_price);
     setCostPrice(response.data.data.cost_price);
     setIsloading(false);
-    console.log(response.data);
   };
 
   //get All Post here from API
@@ -80,6 +85,9 @@ const EditProduct = () => {
               placeholder="Type name"
             />
           </div>
+
+          {errors?.name && <p style={{ color: "red" }}>{errors.name[0]}</p>}
+
           <div className="mb-3">
             <label className="form-label">Sale Price</label>
             <input
@@ -109,9 +117,9 @@ const EditProduct = () => {
               aria-label="Default select example"
             >
               <option>Select Post</option>
-              {posts.map((post, index) => {
+              {posts.map((post) => {
                 return (
-                  <option key={index.id} value={post.id}>
+                  <option key={post.id} value={post.id}>
                     {post.title}
                   </option>
                 );
